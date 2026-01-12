@@ -1,0 +1,24 @@
+{
+  "C_Cpp.intelliSenseEngine": "default",
+  "idf.espIdfPath": "/home/sten/esp/v5.5.2/esp-idf",
+  "idf.pythonInstallPath": "/usr/bin/python",
+  "idf.openOcdConfigs": [
+    "board/esp32-wrover-kit-3.3v.cfg"
+  ],
+  "idf.toolsPath": "/home/sten/.espressif",
+  "idf.customExtraVars": {
+    "IDF_TARGET": "esp32"
+  },
+
+  "terminal.integrated.profiles.linux": {
+    "host-zsh": {
+      "path": "flatpak-spawn",
+      "args": [
+        "--host",
+        "--env=TERM=xterm-256color",
+        "zsh"
+      ]
+    }
+  },
+  "idf.flashType": "UART"
+}

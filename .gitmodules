@@ -1,0 +1,3 @@
+[submodule "components/slang-esp32-component"]
+	path = components/slang-esp32-component
+	url = https://github.com/gespel/slang-esp32-component
