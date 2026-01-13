@@ -52,9 +52,9 @@ static void init_i2s(void) {
         .slot_cfg = I2S_STD_MSB_SLOT_DEFAULT_CONFIG(I2S_DATA_BIT_WIDTH_32BIT, I2S_SLOT_MODE_STEREO),
         .gpio_cfg = {
             .mclk = I2S_GPIO_UNUSED,
-            .bclk = GPIO_NUM_4,
-            .ws = GPIO_NUM_5,
-            .dout = GPIO_NUM_18,
+            .bclk = GPIO_NUM_18,
+            .ws = GPIO_NUM_25,
+            .dout = GPIO_NUM_26,
             .din = I2S_GPIO_UNUSED,
             .invert_flags = {
                 .mclk_inv = false,
@@ -70,6 +70,7 @@ static void init_i2s(void) {
 
 void app_main(void)
 {
+    uint16_t audioBuffer[BLOCK_SIZE];
     init_i2s();
 
     char *p = "x = 10; s = sawtoothosc(110);";
@@ -91,9 +92,11 @@ void app_main(void)
         s_led_state = !s_led_state;
 
         float *buf = renderBuffer(core);
-        int bytes_written = 0;
+        for (int i = 0; i < BLOCK_SIZE; i++) {
+            audioBuffer[i] = buf[i] * 40000;
+        }
 
-        i2s_channel_write(tx_handle, buf, sizeof(float)*BLOCK_SIZE, &bytes_written, 0);
+        i2s_channel_write(tx_handle, buf, sizeof(float) * BLOCK_SIZE, NULL, 0);
 
         /*for (int i = 0; i < BLOCK_SIZE; i++) {
             ESP_LOGI(TAG, "buf[%i] = %f", i, buf[i]);
