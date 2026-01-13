@@ -13,6 +13,7 @@
 #include "esp_log.h"
 #include "sdkconfig.h"
 #include "slang-lib.h"
+#include "driver/i2s_std.h"
 
 static const char *TAG = "Constructor";
 
@@ -22,6 +23,9 @@ static const char *TAG = "Constructor";
 #define BLINK_GPIO 5
 
 static uint8_t s_led_state = 0;
+
+i2s_chan_handle_t tx_handle;
+i2s_chan_config_t chan_cfg = I2S_CHANNEL_DEFAULT_CONFIG(I2S_NUM_AUTO, I2S_ROLE_MASTER);
 
 
 static void blink_led(void)
@@ -38,8 +42,34 @@ static void configure_led(void)
     gpio_set_direction(BLINK_GPIO, GPIO_MODE_OUTPUT);
 }
 
+static void init_i2s(void) {
+    i2s_new_channel(&chan_cfg, &tx_handle, NULL);
+
+    i2s_std_config_t std_cfg = {
+        .clk_cfg = I2S_STD_CLK_DEFAULT_CONFIG(48000),
+        .slot_cfg = I2S_STD_MSB_SLOT_DEFAULT_CONFIG(I2S_DATA_BIT_WIDTH_32BIT, I2S_SLOT_MODE_STEREO),
+        .gpio_cfg = {
+            .mclk = I2S_GPIO_UNUSED,
+            .bclk = GPIO_NUM_4,
+            .ws = GPIO_NUM_5,
+            .dout = GPIO_NUM_18,
+            .din = I2S_GPIO_UNUSED,
+            .invert_flags = {
+                .mclk_inv = false,
+                .bclk_inv = false,
+                .ws_inv = false,
+            },
+        },
+    };
+
+    i2s_channel_init_std_mode(tx_handle, &std_cfg);
+    i2s_channel_enable(tx_handle);
+}
+
 void app_main(void)
 {
+    init_i2s();
+
     char *p = "x = 10; s = sawtoothosc(110);";
     int numTokens = 0;
 
