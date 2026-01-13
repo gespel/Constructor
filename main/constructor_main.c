@@ -21,6 +21,8 @@ static const char *TAG = "Constructor";
    or you can edit the following line and set a number here.
 */
 #define BLINK_GPIO 5
+#define SAMPLE_RATE 48000
+#define BLOCK_SIZE 512
 
 static uint8_t s_led_state = 0;
 
@@ -46,7 +48,7 @@ static void init_i2s(void) {
     i2s_new_channel(&chan_cfg, &tx_handle, NULL);
 
     i2s_std_config_t std_cfg = {
-        .clk_cfg = I2S_STD_CLK_DEFAULT_CONFIG(48000),
+        .clk_cfg = I2S_STD_CLK_DEFAULT_CONFIG(SAMPLE_RATE),
         .slot_cfg = I2S_STD_MSB_SLOT_DEFAULT_CONFIG(I2S_DATA_BIT_WIDTH_32BIT, I2S_SLOT_MODE_STEREO),
         .gpio_cfg = {
             .mclk = I2S_GPIO_UNUSED,
@@ -76,11 +78,10 @@ void app_main(void)
     Token *tokens = tokenize(p, &numTokens);
 
     SlangInterpreter *interpreter = createSlangInterpreter(tokens, numTokens);
-    SlangBufferCore *core = createBufferCore(interpreter, 48000, 512);
+    SlangBufferCore *core = createBufferCore(interpreter, SAMPLE_RATE, BLOCK_SIZE);
 
     interpret(interpreter);
 
-    /* Configure the peripheral according to the LED type */
     configure_led();
 
     while (1) {
@@ -90,7 +91,7 @@ void app_main(void)
         s_led_state = !s_led_state;
 
         float *buf = renderBuffer(core);
-        for (int i = 0; i < 512; i++) {
+        for (int i = 0; i < BLOCK_SIZE; i++) {
             ESP_LOGI(TAG, "buf[%i] = %f", i, buf[i]);
         }
 
