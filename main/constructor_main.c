@@ -73,7 +73,7 @@ void app_main(void)
     uint16_t audioBuffer[BLOCK_SIZE];
     init_i2s();
 
-    char *p = "x = 10; s = sawtoothosc(110);";
+    char *p = "x = 10; s = sawtoothosc(110); lowpassfilter(55);";
     int numTokens = 0;
 
     Token *tokens = tokenize(p, &numTokens);
@@ -96,7 +96,7 @@ void app_main(void)
             audioBuffer[i] = buf[i] * 40000;
         }
 
-        i2s_channel_write(tx_handle, buf, sizeof(float) * BLOCK_SIZE, NULL, 0);
+        i2s_channel_write(tx_handle, audioBuffer, sizeof(float) * BLOCK_SIZE, NULL, 0);
 
         /*for (int i = 0; i < BLOCK_SIZE; i++) {
             ESP_LOGI(TAG, "buf[%i] = %f", i, buf[i]);
