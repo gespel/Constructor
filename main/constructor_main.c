@@ -91,9 +91,13 @@ void app_main(void)
         s_led_state = !s_led_state;
 
         float *buf = renderBuffer(core);
-        for (int i = 0; i < BLOCK_SIZE; i++) {
+        int bytes_written = 0;
+
+        i2s_channel_write(tx_handle, buf, sizeof(float)*BLOCK_SIZE, &bytes_written, 0);
+
+        /*for (int i = 0; i < BLOCK_SIZE; i++) {
             ESP_LOGI(TAG, "buf[%i] = %f", i, buf[i]);
-        }
+        }*/
 
         vTaskDelay(CONFIG_BLINK_PERIOD / portTICK_PERIOD_MS);
     }
