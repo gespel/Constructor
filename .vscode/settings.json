@@ -20,5 +20,6 @@
       ]
     }
   },
-  "idf.flashType": "UART"
+  "idf.flashType": "UART",
+  "idf.currentSetup": "/home/sten/.espressif/v5.5.2/esp-idf"
 }
