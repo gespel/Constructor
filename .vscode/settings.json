@@ -21,5 +21,6 @@
     }
   },
   "idf.flashType": "UART",
-  "idf.currentSetup": "/home/sten/.espressif/v5.5.2/esp-idf"
+  "idf.currentSetup": "/home/sten/.espressif/v5.5.2/esp-idf",
+  "idf.port": "/dev/ttyUSB0"
 }
